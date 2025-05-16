@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Mini-Airbnb</h1>
+      <p>Trouvez votre hébergement idéal pour votre prochain séjour</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2>Nos logements disponibles</h2>
+    
+    <div class="logements-grid">
+      <% logements.forEach(logement => { %>
+        <div class="logement-card">
+          <img src="/images/<%= logement.images[0] %>" alt="<%= logement.titre %>" class="logement-image">
+          <div class="logement-info">
+            <h3><%= logement.titre %></h3>
+            <p class="logement-emplacement"><%= logement.emplacement %></p>
+            <p class="logement-capacite"><%= logement.capacite %> voyageurs • <%= logement.chambres %> chambre<%= logement.chambres > 1 ? 's' : '' %></p>
+            <p class="logement-prix"><strong><%= logement.prix %>€</strong> / nuit</p>
+            <a href="/logement/<%= logement.id %>" class="btn">Voir ce logement</a>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Mini-Airbnb - Projet éducatif</p>
+    </div>
+  </footer>
+</body>
+</html>

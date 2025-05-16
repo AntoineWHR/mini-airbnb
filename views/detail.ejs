@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Leaflet CSS pour la carte -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><a href="/">Mini-Airbnb</a></h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="detail-container">
+      <a href="/" class="retour-btn">&larr; Retour à la liste</a>
+      
+      <div class="detail-header">
+        <h2><%= logement.titre %></h2>
+        <p class="logement-emplacement"><%= logement.emplacement %></p>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-images">
+          <img src="/images/<%= logement.images[0] %>" alt="<%= logement.titre %>" class="detail-image">
+        </div>
+
+        <div class="detail-info">
+          <div class="info-section">
+            <h3>À propos de ce logement</h3>
+            <p><%= logement.description %></p>
+            
+            <div class="detail-specs">
+              <div class="spec-item">
+                <strong>Capacité:</strong> <%= logement.capacite %> voyageurs
+              </div>
+              <div class="spec-item">
+                <strong>Chambres:</strong> <%= logement.chambres %>
+              </div>
+              <div class="spec-item">
+                <strong>Salles de bain:</strong> <%= logement.sallesDeBain %>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <h3>Équipements</h3>
+            <ul class="equipements-list">
+              <% logement.equipements.forEach(equipement => { %>
+                <li><%= equipement %></li>
+              <% }); %>
+            </ul>
+          </div>
+
+          <div class="prix-reservation">
+            <div class="prix">
+              <strong><%= logement.prix %>€</strong> / nuit
+            </div>
+            <button class="reserver-btn">Réserver</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section carte avec Leaflet -->
+      <div class="info-section">
+        <h3>Emplacement</h3>
+        <div id="map" class="carte"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Mini-Airbnb - Projet éducatif</p>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS pour la carte -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+          crossorigin=""></script>
+  <script>
+    // Récupérer les coordonnées depuis les données du logement
+    const lat = <%= logement.coordonnees.lat %>;
+    const lng = <%= logement.coordonnees.lng %>;
+    
+    // Initialiser la carte
+    const map = L.map('map').setView([lat, lng], 13);
+    
+    // Ajouter la couche de tuiles OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    // Ajouter un marqueur à l'emplacement du logement
+    L.marker([lat, lng]).addTo(map)
+      .bindPopup('<%= logement.titre %>');
+  </script>
+</body>
+</html>
