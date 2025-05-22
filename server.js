@@ -2,10 +2,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-// Définir EJS comme moteur de templates
 app.set('view engine', 'ejs');
 
-// Servir les fichiers statiques (CSS, images)
 app.use(express.static('public'));
 
 const logements = [
