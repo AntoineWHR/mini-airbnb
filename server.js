@@ -1,104 +1,132 @@
 const express = require('express');
-const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
-// Données des logements (normalement, ces données proviendraient d'une base de données)
+// Définir EJS comme moteur de templates
+app.set('view engine', 'ejs');
+
+// Servir les fichiers statiques (CSS, images)
+app.use(express.static('public'));
+
 const logements = [
   {
     id: 1,
-    titre: "Appartement lumineux au centre-ville",
-    description: "Bel appartement de 2 chambres, entièrement rénové et idéalement situé en plein cœur de la ville. Cuisine équipée, WiFi haut débit et vue imprenable sur la place principale.",
-    prix: 85,
-    images: ["appart1.jpg"],
+    titre: 'Appartement à Paris',
+    images: ['parisappart.jpg'],
+    emplacement: 'Paris, France',
     capacite: 4,
     chambres: 2,
-    sallesDeBain: 1,
-    equipements: ["WiFi", "Cuisine équipée", "Télévision", "Machine à laver"],
-    emplacement: "Centre-ville",
-    coordonnees: { lat: 48.8566, lng: 2.3522 } // Paris pour l'exemple
+    prix: 100,
+    coordonnees: { lat: 48.8566, lng: 2.3522 },
+    description: 'Un bel appartement au cœur de Paris.',
+    equipements: ['Wi-Fi', 'Climatisation'],
+    hote: {
+      nom: 'Antoine',
+      photo: 'antoine.jpg',
+      description: 'Hôte super accueillant, toujours prêt à aider !'
+    }
   },
   {
     id: 2,
-    titre: "Villa avec piscine proche plage",
-    description: "Magnifique villa de 3 chambres avec piscine privée. Située à seulement 5 minutes à pied de la plage. Parfait pour des vacances en famille ou entre amis.",
-    prix: 150,
-    images: ["villa1.jpg"],
+    titre: 'Maison à Lyon',
+    images: ['lyonmaison.jpg'],
+    emplacement: 'Lyon, France',
     capacite: 6,
     chambres: 3,
-    sallesDeBain: 2,
-    equipements: ["Piscine", "WiFi", "Barbecue", "Lave-vaisselle", "Parking"],
-    emplacement: "Bord de mer",
-    coordonnees: { lat: 43.2965, lng: 5.3698 } // Marseille pour l'exemple
+    prix: 150,
+    coordonnees: { lat: 45.7640, lng: 4.8357 },
+    description: 'Maison spacieuse avec un grand jardin.',
+    equipements: ['Piscine', 'Wi-Fi', 'Climatisation'],
+    hote: {
+      nom: 'Saad',
+      photo: 'saad.jpg',
+      description: 'Saad est un hôte amical et toujours disponible pour ses invités.'
+    }
   },
   {
     id: 3,
-    titre: "Studio cosy dans quartier historique",
-    description: "Charmant studio rénové dans un immeuble ancien du quartier historique. Idéal pour un couple souhaitant découvrir la ville à pied.",
-    prix: 65,
-    images: ["studio1.jpg"],
-    capacite: 2,
-    chambres: 1,
-    sallesDeBain: 1,
-    equipements: ["WiFi", "Cuisine équipée", "Chauffage", "Sèche-cheveux"],
-    emplacement: "Quartier historique",
-    coordonnees: { lat: 45.7640, lng: 4.8357 } // Lyon pour l'exemple
+    titre: 'Maison de Shrek',
+    images: ['shrekmaison.jpg'],
+    emplacement: 'Forêt de Duloc, Royaume de Farquaad',
+    capacite: 5,
+    chambres: 2,
+    prix: 120,
+    coordonnees: { lat: 53.3812, lng: 5.0143 },
+    description: 'La maison de Shrek, un endroit tranquille en pleine forêt.',
+    equipements: ['Télévision', 'Climatisation', 'Bain de boue'],
+    hote: {
+      nom: 'Shrek',
+      photo: 'shrek.jpg',
+      description: 'Un ogre généreux qui adore les voyages et la tranquillité.'
+    }
   },
   {
     id: 4,
-    titre: "Maison de campagne au calme",
-    description: "Grande maison traditionnelle en pierre au milieu de la campagne. Jardin spacieux, terrasse et vue panoramique sur les collines environnantes.",
-    prix: 120,
-    images: ["maison1.jpg"],
-    capacite: 8,
-    chambres: 4,
-    sallesDeBain: 2,
-    equipements: ["Jardin", "Cheminée", "WiFi", "Cuisine équipée", "Barbecue"],
-    emplacement: "Campagne",
-    coordonnees: { lat: 44.5721, lng: 6.0872 } // Quelque part dans les Alpes
+    titre: 'Maison des Simpsons',
+    images: ['simpsonsmaison.jpg'],
+    emplacement: 'Springfield, USA',
+    capacite: 6,
+    chambres: 3,
+    prix: 150,
+    coordonnees: { lat: 39.7392, lng: -94.5207 },
+    description: 'La célèbre maison des Simpsons, un endroit idéal pour les familles.',
+    equipements: ['Télévision', 'Piscine', 'Garage'],
+    hote: {
+      nom: 'Homer Simpson',
+      photo: 'homer.jpg',
+      description: 'Un hôte passionné de donuts et de télévision.'
+    }
+  },
+  {
+    id: 5,
+    titre: 'Loft à New York',
+    images: ['nyloft.jpg'],
+    emplacement: 'New York, USA',
+    capacite: 4,
+    chambres: 2,
+    prix: 200,
+    coordonnees: { lat: 40.7128, lng: -74.0060 },
+    description: 'Un loft moderne au cœur de Manhattan, parfait pour une escapade urbaine.',
+    equipements: ['Wi-Fi', 'Climatisation', 'Machine à café'],
+    hote: {
+      nom: 'John Doe',
+      photo: 'john.jpg',
+      description: 'John est un passionné d\'architecture et un excellent guide pour découvrir New York.'
+    }
   }
 ];
 
-// Configuration du moteur de templates EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Middleware pour servir les fichiers statiques
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Route pour la page d'accueil
+// Route d'accueil avec pagination
 app.get('/', (req, res) => {
-  res.render('accueil', { 
-    logements: logements, 
-    title: 'Mini-Airbnb - Accueil' 
+  const logementsParPage = 5; // Le nombre de logements à afficher par page
+  const page = parseInt(req.query.page) || 1; // Page actuelle, avec une valeur par défaut
+  const startIndex = (page - 1) * logementsParPage;
+  const endIndex = page * logementsParPage;
+  const logementsPage = logements.slice(startIndex, endIndex);
+
+  // Calcul du nombre total de pages
+  const totalPages = Math.ceil(logements.length / logementsParPage);
+
+  // Envoyer les données nécessaires à la vue
+  res.render('accueil', {
+    logements: logementsPage,
+    currentPage: page,
+    totalPages: totalPages
   });
 });
 
-// Route pour la page de détail d'un logement
+// Route de détail pour chaque logement
 app.get('/logement/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const logement = logements.find(logement => logement.id === id);
-  
-  if (!logement) {
-    return res.status(404).render('404', { 
-      title: 'Logement non trouvé' 
-    });
-  }
-  
-  res.render('detail', { 
-    logement: logement, 
-    title: `${logement.titre} - Mini-Airbnb` 
-  });
+  const id = req.params.id;
+  const logement = logements.find(l => l.id == id);
+  res.render('detail', { logement });
 });
 
-// Route pour la page 404 (non trouvé)
+// Route 404
 app.use((req, res) => {
-  res.status(404).render('404', { 
-    title: 'Page non trouvée' 
-  });
+  res.status(404).render('404');
 });
 
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Serveur en cours d'exécution sur http://localhost:${port}`);
 });

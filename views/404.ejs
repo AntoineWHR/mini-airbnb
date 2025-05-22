@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title : 'Page non trouvée - Mini-Airbnb' %></title>
+  <title>404 - Page non trouvée - Mini-Airbnb</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -16,7 +16,18 @@
   <main class="container error-page">
     <h2>404 - Page non trouvée</h2>
     <p>Désolé, la page que vous recherchez n'existe pas.</p>
-    <a href="/" class="btn">Retourner à l'accueil</a>
+    <h3>Peut-être que ces logements pourraient vous intéresser :</h3>
+    <div class="logements-grid">
+      <% logements.slice(0, 3).forEach(logement => { %>
+        <div class="logement-card">
+          <img src="/images/<%= logement.images[0] %>" alt="<%= logement.titre %>" class="logement-image">
+          <h3><%= logement.titre %></h3>
+          <p><%= logement.emplacement %></p>
+          <a href="/logement/<%= logement.id %>" class="btn">Voir ce logement</a>
+        </div>
+      <% }); %>
+    </div>
+    <a href="/" class="btn">Retour à l'accueil</a>
   </main>
 
   <footer>

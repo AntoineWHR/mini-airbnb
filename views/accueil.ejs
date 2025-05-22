@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
+  <title>Mini-Airbnb</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -20,16 +20,29 @@
     <div class="logements-grid">
       <% logements.forEach(logement => { %>
         <div class="logement-card">
-          <img src="/images/<%= logement.images[0] %>" alt="<%= logement.titre %>" class="logement-image">
+          <img src="/images/<%= logement.images[0] %>" alt="<%= logement.titre %>" class="logement-image"> <!-- Affichage de l'image -->
           <div class="logement-info">
             <h3><%= logement.titre %></h3>
             <p class="logement-emplacement"><%= logement.emplacement %></p>
             <p class="logement-capacite"><%= logement.capacite %> voyageurs • <%= logement.chambres %> chambre<%= logement.chambres > 1 ? 's' : '' %></p>
-            <p class="logement-prix"><strong><%= logement.prix %>€</strong> / nuit</p>
+            <p class="logement-prix"><%= logement.prix %>€ / nuit</p>
             <a href="/logement/<%= logement.id %>" class="btn">Voir ce logement</a>
           </div>
         </div>
       <% }); %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="/?page=<%= currentPage - 1 %>">Précédent</a>
+      <% } %>
+
+      <span>Page <%= currentPage %> sur <%= totalPages %></span>
+
+      <% if (currentPage < totalPages) { %>
+        <a href="/?page=<%= currentPage + 1 %>">Suivant</a>
+      <% } %>
     </div>
   </main>
 
